@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     app: "ELISY254 Live Signal Scanner",
     status: missing.length ? "needs_configuration" : "configured_but_sampler_required",
     missing,
-    strategies: ["OVER_2", "UNDER_7", "EVEN", "MATCHES"],
+    strategies: ["OVER_2", "OVER_3", "OVER_4", "UNDER_7", "UNDER_8", "MATCHES", "EVEN", "ODD"],
     message: "No entry signal is issued until a complete live tick window passes the configured strategy filters."
   });
 }
