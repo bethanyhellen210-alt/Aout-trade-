@@ -1,90 +1,35 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090909">
-  <title>ELISY254 Live Signal Scanner</title>
-  <style>
-    :root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#090909;color:#f5f5f5}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#090909}
-    main{width:min(920px,100%);margin:auto;padding:28px 18px}
-    .brand{color:#d8b45a;letter-spacing:.18em;font-size:.78rem;font-weight:800}
-    h1{font-size:clamp(1.8rem,7vw,3rem);line-height:1.05;margin:12px 0}
-    p{color:#aaa;line-height:1.55}.status{border:1px solid #333;border-radius:14px;padding:18px;margin:24px 0;background:#111}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    #markets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} .market{border:1px solid #303030;border-radius:8px;padding:10px;color:#ddd;font-size:.9rem} .muted{color:#999;font-size:.85rem} article{border:1px solid #303030;border-radius:12px;padding:16px;background:#101010}
-    article strong{display:block;color:#d8b45a;font-size:1.05rem;margin-bottom:8px}
-    small{color:#999}button{background:#d8b45a;color:#111;border:0;border-radius:9px;padding:12px 16px;font-weight:800}
-    @media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-  </style>
-</head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050505">
+<title>ELISY254 — Deriv Signal Scanner</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#050505;color:#f7f4ea;--gold:#e7bd4f;--line:#6f5520;--muted:#a9a49a;--green:#16a34a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#34250b 0,#0a0906 38%,#050505 72%);min-height:100vh}
+main{width:min(1000px,100%);margin:auto;padding:24px 14px 36px}.brand{color:var(--gold);font-weight:900;letter-spacing:.18em;font-size:.82rem}h1{font-size:clamp(2rem,7vw,4rem);line-height:1;margin:12px 0 8px;letter-spacing:-.04em;background:linear-gradient(100deg,#fff0a7,#d6a62d 55%,#fff1b8);-webkit-background-clip:text;background-clip:text;color:transparent}.sub{color:#ddd;letter-spacing:.15em;font-size:.8rem;margin:0 0 22px}.tagline{color:var(--gold);letter-spacing:.2em;font-size:.72rem;margin-bottom:24px}
+.panel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(24,20,12,.97),rgba(6,6,6,.98));box-shadow:0 0 24px #d6a62d0c;margin:16px 0;overflow:hidden}.panel-head{padding:16px;border-bottom:1px solid #403319;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.panel-title{color:var(--gold);font-weight:850;letter-spacing:.06em}.pill{border:1px solid #5d4920;border-radius:999px;padding:7px 10px;color:#e8cb7b;font-size:.72rem;font-weight:800}.pill.green{color:#a7f3b8;border-color:#167c35;background:#092712}.body{padding:16px}.status{font-size:1.15rem;font-weight:850}.muted{color:var(--muted);line-height:1.55;font-size:.9rem}.columns{display:grid;grid-template-columns:1fr;gap:14px}.signal{border:1px solid #5d4920;border-radius:14px;padding:20px;text-align:center;background:radial-gradient(ellipse at center,#251a05,#080807 70%)}.signal .action{font-weight:950;font-size:clamp(2rem,8vw,3.4rem);color:var(--gold);letter-spacing:-.04em}.signal .buy{color:white;font-size:1.4rem;font-weight:900}.signal .arrow{font-size:2.3rem;color:var(--gold)}.fields{display:grid;grid-template-columns:1fr;gap:0}.field{padding:12px 0;border-bottom:1px solid #302a1c}.field:last-child{border-bottom:0}.label{font-size:.73rem;color:var(--gold);letter-spacing:.1em;font-weight:800;margin-bottom:5px}.value{font-size:1.04rem;font-weight:650;overflow-wrap:anywhere}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.strategy{border:1px solid #3e3219;border-radius:12px;padding:14px;background:#0d0c09}.strategy strong{display:block;color:var(--gold);margin-bottom:6px}.strategy small{color:var(--muted);line-height:1.4}.markets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.market{border:1px solid #342b19;border-radius:9px;padding:10px;font-size:.86rem;overflow-wrap:anywhere}.foot{display:grid;grid-template-columns:1fr;gap:12px;padding:16px;color:var(--muted);font-size:.8rem}.foot strong{color:var(--gold);display:block;margin-bottom:5px}button{background:linear-gradient(120deg,#f8dc7b,#c59626);color:#100d05;border:0;border-radius:10px;padding:12px 16px;font-weight:900;cursor:pointer}button:focus-visible{outline:2px solid white;outline-offset:3px}
+@media(min-width:650px){main{padding:34px 22px}.columns{grid-template-columns:1fr 1fr}.fields{grid-template-columns:1fr 1fr;column-gap:24px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.foot{grid-template-columns:repeat(3,1fr)}}
+</style></head>
 <body><main>
-  <div class="brand">ELISY254</div>
-  <h1>LIVE SIGNAL SCANNER</h1>
-  <p>Deriv tick analysis · Entry signals only when the configured rules pass.</p>
-  <section class="status" aria-live="polite">
-    <strong id="status">Checking configuration…</strong>
-    <p id="detail">No signal will be shown without a complete live tick sample.</p>
-    <button id="refresh">Refresh status</button>
-  </section>
-  <section class="status">
-    <strong>MARKET COVERAGE</strong>
-    <p>Jump indices and Volatility 1-second indices</p>
-    <div id="markets">Loading supported live markets…</div>
-  </section>
-  <div class="grid">
-    <article><strong>OVER 2</strong><small>Over 2 contract analysis</small></article>
-    <article><strong>OVER 3</strong><small>Over 3 contract analysis</small></article>
-    <article><strong>OVER 4</strong><small>Over 4 contract analysis</small></article>
-    <article><strong>UNDER 7</strong><small>Under 7 contract analysis</small></article>
-    <article><strong>UNDER 8</strong><small>Under 8 contract analysis</small></article>
-    <article><strong>MATCHES</strong><small>Candidate digit 0–9</small></article>
-    <article><strong>EVEN</strong><small>Even final-digit analysis</small></article>
-    <article><strong>ODD</strong><small>Odd final-digit analysis</small></article>
-  </div>
-  <p><small>Analysis is informational, not a guarantee of outcomes. This initial scaffold does not execute trades.</small></p>
+<header><div class="brand">♛ ELISY254</div><h1>DERIV SIGNAL SCANNER</h1><div class="sub">PUBLIC LIVE MARKET ANALYSIS</div><div class="tagline">ANALYZE &nbsp; • &nbsp; DETECT &nbsp; • &nbsp; ALERT</div></header>
+<section class="panel" aria-live="polite"><div class="panel-head"><div><div class="panel-title">SCANNER STATUS</div><div id="status" class="status" style="margin-top:8px">Connecting to public market feed…</div></div><span id="statusPill" class="pill">CHECKING</span></div><div class="body"><p id="detail" class="muted">No signal is published until live tick data and the configured entry rules are evaluated.</p><button id="refresh">Refresh status</button></div></section>
+<section class="panel"><div class="panel-head"><div class="panel-title">SIGNAL PREVIEW</div><span class="pill">FORMAT EXAMPLE</span></div><div class="body columns"><div class="fields">
+<div class="field"><div class="label">MARKET</div><div class="value" id="signalMarket">Waiting for live market selection</div></div>
+<div class="field"><div class="label">STRATEGY</div><div class="value">OVER 2</div></div>
+<div class="field"><div class="label">CONTRACT</div><div class="value">Over 2</div></div>
+<div class="field"><div class="label">ANALYSIS WINDOW</div><div class="value">Last 1,000 ticks (planned)</div></div>
+</div><div class="signal"><div class="arrow">↗</div><div class="buy">BUY</div><div class="action">OVER 2</div><p class="muted">Example layout only.<br>No live entry signal generated.</p><span class="pill">WAITING FOR VALIDATION</span></div></div></section>
+<section class="panel"><div class="panel-head"><div class="panel-title">STRATEGY LIBRARY</div><span class="pill">8 STRATEGIES</span></div><div class="body"><div class="grid">
+<div class="strategy"><strong>OVER 2</strong><small>Evaluate digits 0–2 against target digits 3–9.</small></div><div class="strategy"><strong>OVER 3</strong><small>Evaluate digits 0–3 against target digits 4–9.</small></div><div class="strategy"><strong>OVER 4</strong><small>Evaluate digits 0–4 against target digits 5–9.</small></div><div class="strategy"><strong>UNDER 7</strong><small>Evaluate digits 7–9 against target digits 0–6.</small></div><div class="strategy"><strong>UNDER 8</strong><small>Evaluate digits 8–9 against target digits 0–7.</small></div><div class="strategy"><strong>MATCHES</strong><small>Candidate digit 0–9; show only when prediction rules qualify.</small></div><div class="strategy"><strong>EVEN</strong><small>Analyze even final digits: 0, 2, 4, 6, 8.</small></div><div class="strategy"><strong>ODD</strong><small>Analyze odd final digits: 1, 3, 5, 7, 9.</small></div>
+</div></div></section>
+<section class="panel"><div class="panel-head"><div class="panel-title">PUBLIC MARKET COVERAGE</div><span class="pill">NO PERSONAL TOKEN</span></div><div class="body"><p class="muted">Requested coverage: Jump indices and Volatility 1-second indices.</p><div id="markets" class="markets"><span class="muted">Loading available markets…</span></div></div></section>
+<section class="panel foot"><div><strong>PUBLIC DATA ONLY</strong>No personal Deriv account token used for public market analysis.</div><div><strong>SIGNAL ONLY</strong>No automatic trading. Signals do not guarantee outcomes.</div><div><strong>LIVE FEED STATUS</strong><span id="feedNote">Market discovery has not been verified yet.</span></div></section>
+<p class="muted" style="text-align:center;font-size:.75rem">ELISY254 — YOUR TRADING ASSISTANT</p>
 </main>
 <script>
-async function refreshStatus(){
-  const status=document.getElementById('status'), detail=document.getElementById('detail');
-  status.textContent='Checking configuration…';
-  try{
-    const response=await fetch('/api/scan',{cache:'no-store'});
-    const data=await response.json();
-    status.textContent=data.status==='needs_configuration'?'SETUP REQUIRED':'SCANNER NOT YET LIVE';
-    detail.textContent=data.missing?.length?'Configure on Vercel: '+data.missing.join(', '):data.message;
-  }catch{
-    status.textContent='STATUS UNAVAILABLE';
-    detail.textContent='Deploy the API endpoint with the site, then refresh.';
-  }
-}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function refreshStatus(){const status=document.getElementById('status'),detail=document.getElementById('detail'),pill=document.getElementById('statusPill');status.textContent='Checking configuration…';try{const r=await fetch('/api/scan',{cache:'no-store'});const d=await r.json();status.textContent=d.status==='needs_configuration'?'SETUP REQUIRED':'SIGNAL ENGINE NOT YET LIVE';pill.textContent=d.status==='needs_configuration'?'SETUP REQUIRED':'NOT LIVE';detail.textContent=d.missing?.length?'Vercel configuration required: '+d.missing.join(', '):d.message||'The live tick sampler and strategy engine still need implementation.';}catch{status.textContent='STATUS UNAVAILABLE';pill.textContent='OFFLINE';detail.textContent='Deploy the API endpoint with this site, then refresh.';}}
 document.getElementById('refresh').addEventListener('click',refreshStatus);
-async function loadMarkets(){
-  const box=document.getElementById('markets');
-  try{
-    const configResponse=await fetch('/api/markets',{cache:'no-store'});
-    const config=await configResponse.json();
-    if(!config.appId) throw new Error('Add DERIV_APP_ID in Vercel Environment Variables.');
-    const socket=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id='+encodeURIComponent(config.appId));
-    const timeout=setTimeout(()=>{socket.close();box.innerHTML='<span class="muted">Market lookup timed out. Refresh to retry.</span>';},12000);
-    socket.onopen=()=>socket.send(JSON.stringify({active_symbols:'brief', product_type:'basic'}));
-    socket.onmessage=(event)=>{
-      const data=JSON.parse(event.data);
-      if(data.error){clearTimeout(timeout);box.textContent=data.error.message||'Deriv market lookup failed.';socket.close();return;}
-      if(!data.active_symbols)return;
-      clearTimeout(timeout);
-      const list=data.active_symbols.filter(m=>{
-        const name=(m.display_name||'')+' '+(m.symbol||'');
-        return /jump/i.test(name)||(/volatility/i.test(name)&&/1s|1-second|1 second/i.test(name));
-      }).sort((a,b)=>(a.display_name||'').localeCompare(b.display_name||''));
-      if(!list.length){box.innerHTML='<span class="muted">No matching markets were returned by Deriv for this app.</span>';return;}
-      box.innerHTML=list.map(m=>'<div class="market">'+String(m.display_name||m.symbol).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</div>').join('');
-      socket.close();
-    };
-    socket.onerror=()=>{clearTimeout(timeout);box.innerHTML='<span class="muted">Could not connect to Deriv. Check the App ID and network.</span>';};
-  }catch(e){box.innerHTML='<span class="muted">'+String(e.message||'Market list unavailable').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</span>';}
-}
-refreshStatus();
-loadMarkets();
+async function loadMarkets(){const box=document.getElementById('markets');try{const r=await fetch('/api/markets',{cache:'no-store'}),cfg=await r.json();if(!cfg.appId)throw new Error('Add DERIV_APP_ID in Vercel Environment Variables. This is an application ID, not your personal account token.');const ws=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id='+encodeURIComponent(cfg.appId));const timeout=setTimeout(()=>{ws.close();box.innerHTML='<span class="muted">Market lookup timed out. Tap refresh to retry.</span>';},12000);ws.onopen=()=>ws.send(JSON.stringify({active_symbols:'brief',product_type:'basic'}));ws.onmessage=e=>{const d=JSON.parse(e.data);if(d.error){clearTimeout(timeout);box.innerHTML='<span class="muted">'+esc(d.error.message||'Market lookup failed')+'</span>';ws.close();return;}if(!d.active_symbols)return;clearTimeout(timeout);const list=d.active_symbols.filter(m=>{const n=(m.display_name||'')+' '+(m.symbol||'');return /jump/i.test(n)||(/volatility/i.test(n)&&/1s|1-second|1 second/i.test(n));}).sort((a,b)=>(a.display_name||'').localeCompare(b.display_name||''));if(!list.length){box.innerHTML='<span class="muted">No matching markets returned. Check the public feed response.</span>';return;}box.innerHTML=list.map(m=>'<div class="market">'+esc(m.display_name||m.symbol)+'</div>').join('');document.getElementById('signalMarket').textContent='Select a market after the live scanner is implemented';document.getElementById('feedNote').textContent='Market list received from Deriv public feed.';ws.close();};ws.onerror=()=>{clearTimeout(timeout);box.innerHTML='<span class="muted">Could not connect to Deriv. Check the App ID and network.</span>';};}catch(e){box.innerHTML='<span class="muted">'+esc(e.message||'Market list unavailable')+'</span>';}}
+refreshStatus();loadMarkets();
 </script></body></html>
