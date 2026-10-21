@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <title>ELISY254 Live Signal Scanner</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#090909;color:#f5f5f5}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#090909}
+    main{width:min(920px,100%);margin:auto;padding:28px 18px}
+    .brand{color:#d8b45a;letter-spacing:.18em;font-size:.78rem;font-weight:800}
+    h1{font-size:clamp(1.8rem,7vw,3rem);line-height:1.05;margin:12px 0}
+    p{color:#aaa;line-height:1.55}.status{border:1px solid #333;border-radius:14px;padding:18px;margin:24px 0;background:#111}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    article{border:1px solid #303030;border-radius:12px;padding:16px;background:#101010}
+    article strong{display:block;color:#d8b45a;font-size:1.05rem;margin-bottom:8px}
+    small{color:#999}button{background:#d8b45a;color:#111;border:0;border-radius:9px;padding:12px 16px;font-weight:800}
+    @media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  </style>
+</head>
+<body><main>
+  <div class="brand">ELISY254</div>
+  <h1>LIVE SIGNAL SCANNER</h1>
+  <p>Deriv tick analysis · Entry signals only when the configured rules pass.</p>
+  <section class="status" aria-live="polite">
+    <strong id="status">Checking configuration…</strong>
+    <p id="detail">No signal will be shown without a complete live tick sample.</p>
+    <button id="refresh">Refresh status</button>
+  </section>
+  <div class="grid">
+    <article><strong>OVER 2</strong><small>Frequency-filtered setup</small></article>
+    <article><strong>UNDER 7</strong><small>Frequency-filtered setup</small></article>
+    <article><strong>EVEN</strong><small>Digit parity analysis</small></article>
+    <article><strong>MATCHES</strong><small>Candidate digit analysis</small></article>
+  </div>
+  <p><small>Analysis is informational, not a guarantee of outcomes. This initial scaffold does not execute trades.</small></p>
+</main>
+<script>
+async function refreshStatus(){
+  const status=document.getElementById('status'), detail=document.getElementById('detail');
+  status.textContent='Checking configuration…';
+  try{
+    const response=await fetch('/api/scan',{cache:'no-store'});
+    const data=await response.json();
+    status.textContent=data.status==='needs_configuration'?'SETUP REQUIRED':'SCANNER NOT YET LIVE';
+    detail.textContent=data.missing?.length?'Configure on Vercel: '+data.missing.join(', '):data.message;
+  }catch{
+    status.textContent='STATUS UNAVAILABLE';
+    detail.textContent='Deploy the API endpoint with the site, then refresh.';
+  }
+}
+document.getElementById('refresh').addEventListener('click',refreshStatus);
+refreshStatus();
+</script></body></html>
