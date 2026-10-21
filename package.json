@@ -1,0 +1,9 @@
+{
+  "name": "elisy254-live-signal-scanner",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}
