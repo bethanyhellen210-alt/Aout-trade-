@@ -1,19 +1,19 @@
-const json = (data, status = 200) => new Response(JSON.stringify(data), {
-  status,
-  headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
-});
+export default async function handler(req, res) {
+  const json = (data, status = 200) => {
+    res.statusCode = status;
+    res.setHeader("content-type", "application/json; charset=utf-8");
+    res.setHeader("cache-control", "no-store");
+    res.end(JSON.stringify(data));
+  };
 
-export default async function handler(request) {
   const secret = process.env.CRON_SECRET;
-  const authorization = request.headers.get("authorization");
+  const authorization = req.headers.authorization;
   if (secret && authorization !== `Bearer ${secret}`) {
     return json({ error: "Unauthorized" }, 401);
   }
 
-  // This endpoint is intentionally a status/check endpoint until a persistent
-  // tick sampler and supported notification destination are configured.
-  // Vercel serverless instances cannot reliably retain a rolling tick window
-  // between invocations; do not fabricate a signal from incomplete data.
+  // Status endpoint only: no signals are fabricated from incomplete data.
+  // A persistent tick sampler and notification provider still need implementing.
   const missing = [];
   if (!process.env.DERIV_APP_ID) missing.push("DERIV_APP_ID");
   if (!process.env.CRON_SECRET) missing.push("CRON_SECRET");
