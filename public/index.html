@@ -13,7 +13,7 @@
     h1{font-size:clamp(1.8rem,7vw,3rem);line-height:1.05;margin:12px 0}
     p{color:#aaa;line-height:1.55}.status{border:1px solid #333;border-radius:14px;padding:18px;margin:24px 0;background:#111}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    article{border:1px solid #303030;border-radius:12px;padding:16px;background:#101010}
+    #markets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} .market{border:1px solid #303030;border-radius:8px;padding:10px;color:#ddd;font-size:.9rem} .muted{color:#999;font-size:.85rem} article{border:1px solid #303030;border-radius:12px;padding:16px;background:#101010}
     article strong{display:block;color:#d8b45a;font-size:1.05rem;margin-bottom:8px}
     small{color:#999}button{background:#d8b45a;color:#111;border:0;border-radius:9px;padding:12px 16px;font-weight:800}
     @media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -27,6 +27,11 @@
     <strong id="status">Checking configuration…</strong>
     <p id="detail">No signal will be shown without a complete live tick sample.</p>
     <button id="refresh">Refresh status</button>
+  </section>
+  <section class="status">
+    <strong>MARKET COVERAGE</strong>
+    <p>Jump indices and Volatility 1-second indices</p>
+    <div id="markets">Loading supported live markets…</div>
   </section>
   <div class="grid">
     <article><strong>OVER 2</strong><small>Over 2 contract analysis</small></article>
@@ -55,5 +60,31 @@ async function refreshStatus(){
   }
 }
 document.getElementById('refresh').addEventListener('click',refreshStatus);
+async function loadMarkets(){
+  const box=document.getElementById('markets');
+  try{
+    const configResponse=await fetch('/api/markets',{cache:'no-store'});
+    const config=await configResponse.json();
+    if(!config.appId) throw new Error('Add DERIV_APP_ID in Vercel Environment Variables.');
+    const socket=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id='+encodeURIComponent(config.appId));
+    const timeout=setTimeout(()=>{socket.close();box.innerHTML='<span class="muted">Market lookup timed out. Refresh to retry.</span>';},12000);
+    socket.onopen=()=>socket.send(JSON.stringify({active_symbols:'brief', product_type:'basic'}));
+    socket.onmessage=(event)=>{
+      const data=JSON.parse(event.data);
+      if(data.error){clearTimeout(timeout);box.textContent=data.error.message||'Deriv market lookup failed.';socket.close();return;}
+      if(!data.active_symbols)return;
+      clearTimeout(timeout);
+      const list=data.active_symbols.filter(m=>{
+        const name=(m.display_name||'')+' '+(m.symbol||'');
+        return /jump/i.test(name)||(/volatility/i.test(name)&&/1s|1-second|1 second/i.test(name));
+      }).sort((a,b)=>(a.display_name||'').localeCompare(b.display_name||''));
+      if(!list.length){box.innerHTML='<span class="muted">No matching markets were returned by Deriv for this app.</span>';return;}
+      box.innerHTML=list.map(m=>'<div class="market">'+String(m.display_name||m.symbol).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</div>').join('');
+      socket.close();
+    };
+    socket.onerror=()=>{clearTimeout(timeout);box.innerHTML='<span class="muted">Could not connect to Deriv. Check the App ID and network.</span>';};
+  }catch(e){box.innerHTML='<span class="muted">'+String(e.message||'Market list unavailable').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</span>';}
+}
 refreshStatus();
+loadMarkets();
 </script></body></html>
